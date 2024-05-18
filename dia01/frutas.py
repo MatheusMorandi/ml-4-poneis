@@ -32,7 +32,7 @@ y = dados[target]
 # %%
 
 
-arvore = tree.DecisionTreeClassifier()
+arvore = tree.DecisionTreeClassifier(random_state=42)
 
 arvore.fit(x, y)
 
@@ -42,5 +42,16 @@ tree.plot_tree(arvore,
                 class_names=arvore.classes_,
                 feature_names=features,
                 filled=True)
+
+# %%
+
+arvore.predict([[1,1,1,1]])
+
+
+# %%
+
+probabilidade = arvore.predict_proba([[1,1,1,1]])[0]
+
+pd.Series(probabilidade, index=arvore.classes_)
 
 # %%
