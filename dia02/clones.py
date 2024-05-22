@@ -61,7 +61,7 @@ x
 
 from sklearn import tree
 
-arvore = tree.DecisionTreeClassifier()
+arvore = tree.DecisionTreeClassifier(max_depth=2)
 
 arvore.fit(x, df["Status "])
 
@@ -73,3 +73,4 @@ tree.plot_tree(arvore,
                 filled= True)
 
 # %%
+
