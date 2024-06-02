@@ -93,5 +93,6 @@ plt.legend(["Pontos", "Regressão Linear", "Árvore de Decisão"])
 
 plt.show()
 
-
 # %%
+
+
