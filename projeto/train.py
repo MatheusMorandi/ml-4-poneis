@@ -71,3 +71,4 @@ arvore_auc_test = metrics.roc_auc_score(y_test, arvore_proba_test)
 print("AUC da Árvore(teste): ", arvore_auc_test)
 
 # %%
+
