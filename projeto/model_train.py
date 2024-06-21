@@ -42,16 +42,27 @@ max_avgRecorrencia = X_train["avgRecorrencia"].max()
 
 imputacao_max = imputation.ArbitraryNumberImputer(variables=["avgRecorrencia"], arbitrary_number=max_avgRecorrencia)
 
-model = tree.DecisionTreeClassifier(max_depth=4, min_samples_leaf=50)
+model = ensemble.RandomForestClassifier(random_state=42)
+
+params = {
+    "n_estimators": [100,150,250,500],
+    "min_samples_leaf": [10,20,30,50,100],
+}
+
+grid = model_selection.GridSearchCV(model,
+                                    param_grid=params,
+                                    n_jobs=-1,
+                                    scoring='roc_auc')
+
 
 meu_pipeline = pipeline.Pipeline([
                                 ("imputacao_max", imputacao_max),
-                                ("model", model),
+                                ("model", grid),
                                 ])
 
 meu_pipeline.fit(X_train, y_train)
 
-# %%
+ # %%
 
 # Predições do Treino
 
