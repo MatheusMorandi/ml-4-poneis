@@ -18,6 +18,8 @@ from sklearn import ensemble
 
 from feature_engine import imputation
 
+import scikitplot as skplt
+
 # %%
 
 df = pd.read_csv("../data/dados_pontos.csv", sep=";")
@@ -74,7 +76,7 @@ y_train_proba = meu_pipeline.predict_proba(X_train)[:,1]
 
 y_test_pred = meu_pipeline.predict(X_test)
 
-y_test_proba = meu_pipeline.predict_proba(X_test)[:,1]
+y_test_proba = meu_pipeline.predict_proba(X_test)
 
 # %%
 
@@ -98,11 +100,42 @@ print("Curva ROC da base de treino: ", train_auc)
 
 # Cuva ROC do Teste
 
-test_auc = metrics.roc_auc_score(y_test, y_test_proba)
+test_auc = metrics.roc_auc_score(y_test, y_test_proba[:,1])
 
 print("Curva ROC da base de teste: ", test_auc)
 
+# %%
 
+f_importance = meu_pipeline[-1].best_estimator_.feature_importances_
 
+pd.Series(f_importance, index=features).sort_values(ascending=False)
+
+# %%
+
+skplt.metrics.plot_roc(y_test, y_test_proba)
+
+# %%
+
+skplt.metrics.plot_cumulative_gain(y_test, y_test_proba)
+
+# %%
+
+usuarios_test = pd.DataFrame(
+    {"verdadeiro": y_test,
+     "proba": y_test_proba[:,1]}
+)
+
+usuarios_test = usuarios_test.sort_values("proba", ascending=False)
+usuarios_test["sum_verdadeiro"] = usuarios_test["verdadeiro"].cumsum()
+usuarios_test["tx captura"]=usuarios_test["sum_verdadeiro"] / usuarios_test["verdadeiro"].sum()
+usuarios_test
+
+# %%
+
+skplt.metrics.plot_lift_curve(y_test, y_test_proba)
+
+# %%
+
+usuarios_test.head(100)['verdadeiro'].mean() / usuarios_test['verdadeiro'].mean()
 
 # %%
